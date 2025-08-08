@@ -1,0 +1,120 @@
+Algoritmo gestor_notas
+	total = 0
+	Repetir
+		Escribir "bienvenido, este es el menu de las opciones disponibles que tiene"
+		Escribir "1. Registrar nuevo curso"
+		Escribir "2. Mostrar todos los cursos"
+		Escribir "3. Calcular promedio general"
+		Escribir "4. Contar cursos aprobados y reprobados"
+		Escribir "5. en espera"
+		Escribir "6 simulacion"
+		Escribir "7 salir"
+		Escribir "Seleccione una opción:"
+		leer menu 
+		segun menu Hacer
+				//1 INGRESAR NOMBRE DE CURSO Y NOTA
+			1: si total  < 6 Entonces
+					total = total +1
+					Escribir "Nombre del curso " total ":"
+					segun total Hacer
+						1: leer curso1
+						2: leer curso2
+						3: leer curso3
+						4: leer curso4
+						5: leer curso5
+					FinSegun
+					Escribir "ingrese la nota del " total ":"
+					segun total Hacer
+						1: leer nota1
+						2:leer nota2
+						3: leer nota3
+						4: leer nota4
+						5: leer nota5
+					FinSegun
+				sino 
+					Escribir "ya no puede ingresar mas cursos y notas"
+				FinSi
+				suma = nota1 + nota2 + nota3 + nota4 + nota5
+				//2 MOSTRAR UN LISTADO DE LOS CURSOS INGRESADOS
+			2: para i = 1 Hasta total Hacer
+					segun i Hacer
+						1:escribir "curso" curso1 "nota de:" nota1
+						2:escribir "curso" curso2 "nota de:" nota2
+						3:escribir "curso" curso3 "nota de:" nota3
+						4:escribir "curso" curso4 "nota de:" nota4
+						5:escribir "curso" curso5 "nota de:" nota5
+					FinSegun
+				FinPara
+				// CALCULAR EL PROMEDIO GENERAL DE TODOS LOS CURSOS
+			3: si total = 0 Entonces
+					Escribir "no a ingresado cursos, no ay promedio para calcular"
+				SiNo
+					escribir "su promedio general en base a sus registros es de: " suma/total
+				FinSi
+				//EVALUAR CUANTOS CURSOS APROBADOS Y REPROBADOS EXISTEN
+			4: aprobado = 0 
+			reprobado = 0
+			para i = 1 Hasta total Hacer
+			segun i Hacer
+			1:Si nota1 >= 60 Entonces
+		    aprobados = aprobados+1
+			SiNo
+			Si nota1 <= 59 Entonces
+			reprobados = reprobados+1
+			FinSi
+			FinSi
+			2:Si nota2 >= 60 Entonces
+			aprobados = aprobados+1
+			SiNo
+			Si nota2 <= 59 Entonces
+			reprobados = reprobados+1
+			FinSi
+			FinSi
+		    3:Si nota3 >= 60 Entonces
+			aprobados = aprobados+1
+			SiNo
+			Si nota3 <= 59 Entonces
+			reprobados = reprobados+1
+			FinSi
+			FinSi
+		    4:Si nota4 >= 60 Entonces
+			aprobados = aprobados+1
+			SiNo
+			Si nota4  <= 60 Entonces
+			reprobados = reprobados+1
+			FinSi
+			FinSi
+		    5:Si nota5 >= 60 Entonces
+			aprobados = aprobados+1
+		    SiNo
+			Si nota5 >= 60 Entonces
+			reprobados = reprobados+1
+			FinSi
+		    FinSi
+		    FinSegun
+		    FinPara
+            Escribir "cursos aprobados: " aprobados
+            Escribir "cursos reprobados: " reprobados
+		5: 
+		6:escribir "aca esta el listado de los cursos"
+		 para i = 1 Hasta total Hacer
+		 segun i Hacer
+		    1:escribir "curso " curso1 " nota de: " nota1
+		    2:escribir "curso " curso2 " nota de: " nota2
+		    3:escribir "curso " curso3 " nota de: " nota3
+			4:escribir "curso " curso4 " nota de: " nota4
+			5:escribir "curso " curso5 " nota de: " nota5
+				FinSegun
+			FinPara
+		   Escribir "esta listo para enviar (s/n)"
+		   Leer enviar
+		   si enviar = "s" Entonces
+			   Escribir "datos enviados"
+		   SiNo
+			   si enviar = "n" Entonces
+				   Escribir "revise y corriga hasta que este segur@"
+			   FinSi
+		   FinSi
+FinSegun
+Hasta Que menu = 7
+FinAlgoritmo
