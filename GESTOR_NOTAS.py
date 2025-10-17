@@ -1,27 +1,26 @@
-from math import factorial
-
-
 historialcursos = {}
 historialgeneral = []
 busquedalineal = {}
 
 # 1. Registro de notas de cursos
 def registronotacurso():
-    nombre = input("ingrese el nombre del curso: ").strip()
-    if not nombre:
-        print("el nombre del curso no puede estar vacío.")
-        return
-    try:
-        nota = float(input("ingrese la nota obtenida (0-100): "))
-        if nota < 0 or nota > 100:
-            print("la nota debe estar entre 0 y 100.")
+    n = int(input("ingrese la cantidad de cursos que desea registrar: "))
+    for i in range(n):
+        nombre = input(f"ingrese el nombre del curso {i + 1}: ").strip()
+        if not nombre:
+            print("el nombre del curso no puede estar vacío.")
             return
-    except ValueError:
-        print("la nota debe ser un numero.")
-        return
+        try:
+            nota = float(input("ingrese la nota obtenida (0-100): "))
+            if nota < 0 or nota > 100:
+                print("la nota debe estar entre 0 y 100.")
+                return
+        except ValueError:
+            print("la nota debe ser un numero.")
+            return
 
-    historialcursos[nombre] = nota
-    print(f"curso {nombre} registrado correctamente con nota {nota}.")
+        historialcursos[nombre] = nota
+        print(f"curso {nombre} registrado correctamente con nota {nota}.")
 
 # 2. Mostrar cursos
 def mostrarcursos(historialcursos):
@@ -153,34 +152,32 @@ def eliminarcurso(historialcursos, historialgeneral):
         print(f"el curso {nombre} no fue encontrado.")
         historialgeneral.append(f"intento fallido de eliminación: curso {nombre} no existe.")
 
-# 8. Ordenar por nota
+# 8. Ordenar por nota (burbuja)
 def ordenar_por_nota(cursos, historial):
     if not cursos:
-        print("No hay cursos registrados para ordenar.")
+        print("No hay cursos para ordenar.")
         return
-    print("¿Cómo deseas ordenar las notas?")
+
     print("1. De menor a mayor")
     print("2. De mayor a menor")
-    try:
-        opcion = int(input("Seleccione una opción: "))
-    except ValueError:
-        print("Opción inválida.")
-        return
-    if opcion == 1:
-        ordenados = sorted(cursos.items(), key=lambda x: x[1])
-        historial.append("Cursos ordenados por nota (ascendente)")
-    elif opcion == 2:
-        ordenados = sorted(cursos.items(), key=lambda x: x[1], reverse=True)
-        historial.append("Cursos ordenados por nota (descendente)")
-    else:
-        print("Opción no válida.")
-        return
-    print("Cursos ordenados por nota:")
-    for nombre, nota in ordenados:
-        print(f" - {nombre} / Nota: {nota}")
-        historial.append(f"Curso: {nombre} / Nota: {nota}")
+    opcion = int(input("Elige una opción: "))
 
-#9. Ordenar por nombre
+    lista = list(cursos.items())  # Convertir el diccionario a lista de tuplas
+
+    # Algoritmo burbuja clásico
+    for i in range(len(lista)):
+        for j in range(len(lista) - 1):
+            if opcion == 1 and lista[j][1] > lista[j + 1][1]:
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+            elif opcion == 2 and lista[j][1] < lista[j + 1][1]:
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+
+    print("Cursos ordenados:")
+    for nombre, nota in lista:
+        print(f"{nombre} - Nota: {nota}")
+        historial.append(f"{nombre} - Nota: {nota}")
+
+# 9. Ordenar por nombre (inserción)
 def ordenar_por_nombre(cursos, historial):
     if not cursos:
         print("No hay cursos registrados para ordenar.")
@@ -193,20 +190,34 @@ def ordenar_por_nombre(cursos, historial):
     except ValueError:
         print("Opción inválida.")
         return
+
+    lista = list(cursos.items())
+
+    # Ordenamiento por inserción
+    for i in range(1, len(lista)):
+        clave = lista[i]
+        j = i - 1
+
+        # Comparación de nombres (ignorando mayúsculas/minúsculas)
+        while j >= 0 and (
+            (opcion == 1 and clave[0].lower() < lista[j][0].lower()) or
+            (opcion == 2 and clave[0].lower() > lista[j][0].lower())
+        ):
+            lista[j + 1] = lista[j]
+            j -= 1
+        lista[j + 1] = clave
+
     if opcion == 1:
-        ordenados = sorted(cursos.items(), key=lambda x: x[0].lower())
-        historial.append("Cursos ordenados por nombre (A-Z)")
+        historial.append("Cursos ordenados por nombre (A-Z) con inserción")
     elif opcion == 2:
-        ordenados = sorted(cursos.items(), key=lambda x: x[0].lower(), reverse=True)
-        historial.append("Cursos ordenados por nombre (Z-A)")
-    else:
-        print("Opción no válida.")
-        return
+        historial.append("Cursos ordenados por nombre (Z-A) con inserción")
+
     print("Cursos ordenados por nombre:")
-    for nombre, nota in ordenados:
+    for nombre, nota in lista:
         print(f" - {nombre} / Nota: {nota}")
         historial.append(f"Curso: {nombre} / Nota: {nota}")
-#10. Búsqueda binaria
+
+# 10. Búsqueda binaria
 def busqueda_binaria(cursos, historial):
     if not cursos:
         print("No hay cursos registrados.")
@@ -241,15 +252,28 @@ def busqueda_binaria(cursos, historial):
         print("Curso no encontrado.")
         historial.append(f"Búsqueda binaria fallida: curso '{nombre}' no existe.")
 
-#11. Simular cola de revisión
-def simular_cola_revision(historialcursos):
+# 11. Simular cola de revisión
+def simular_cola_revision(historialcursos, nom_pers):
     if not historialcursos:
         print("No hay cursos en el historial.")
         return
 
-    print("Simulando cola de revisión...")
+    nom2 = input("confirme su nombre para iniciar la revisión: ")
+    if nom2.strip() == "":
+        print("El nombre no puede estar vacío.")
+        return
+
+    if nom2 != nom_pers:
+        print("El nombre no coincide con el registrado. Revisión cancelada.")
+        return
+
     for curso, nota in historialcursos.items():
         print(f"Revisando curso: {curso} / Nota: {nota}")
+    print(f"Hola {nom2}, comenzando la revisión de cursos...")
+    print("Simulando cola de revisión...")
+    print("Revisión de todos los cursos completada.")
+    print(f"Gracias por tu paciencia, {nom2}. Revisión finalizada.")
+    print("regresando al menu principal...")
 
 # 12. Mostrar historial de cambios
 def mostrarhistorial(historialgeneral):
@@ -263,10 +287,14 @@ def mostrarhistorial(historialgeneral):
 # Menú principal
 print("bienvenido al sistema de registro de notas")
 nom_pers = input("Ingrese su nombre para empezar: ")
-print("Nombre registrado, ¡empecemos!")
+if nom_pers == "":
+    print("El nombre no puede estar vacío. Reinicie el programa.")
+    exit()
+    
+print("Nombre registrado, ¡HERE WE GO!")
 
 while True:
-    print("\nMenú principal:")
+    print("Menú principal:")
     print("1. Agregar curso")
     print("2. Mostrar cursos")
     print("3. Calcular promedio")
@@ -308,7 +336,7 @@ while True:
     elif opcion == 10:
         busqueda_binaria(cursos=historialcursos, historial=historialgeneral)
     elif opcion == 11:
-        simular_cola_revision(historialcursos)
+        simular_cola_revision(historialcursos, nom_pers)
     elif opcion == 12:
         mostrarhistorial(historialgeneral)
     elif opcion == 13:
