@@ -154,58 +154,15 @@ def eliminarcurso(historialcursos, historialgeneral):
         historialgeneral.append(f"intento fallido de eliminación: curso {nombre} no existe.")
 
 # 8. Ordenar por nota
-def ordenar_por_nota(cursos, historial):
-    if not cursos:
-        print("No hay cursos registrados para ordenar.")
-        return
-    print("¿Cómo deseas ordenar las notas?")
-    print("1. De menor a mayor")
-    print("2. De mayor a menor")
-    try:
-        opcion = int(input("Seleccione una opción: "))
-    except ValueError:
-        print("Opción inválida.")
-        return
-    if opcion == 1:
-        ordenados = sorted(cursos.items(), key=lambda x: x[1])
-        historial.append("Cursos ordenados por nota (ascendente)")
-    elif opcion == 2:
-        ordenados = sorted(cursos.items(), key=lambda x: x[1], reverse=True)
-        historial.append("Cursos ordenados por nota (descendente)")
-    else:
-        print("Opción no válida.")
-        return
-    print("Cursos ordenados por nota:")
-    for nombre, nota in ordenados:
-        print(f" - {nombre} / Nota: {nota}")
-        historial.append(f"Curso: {nombre} / Nota: {nota}")
+
 
 #9. Ordenar por nombre
 def ordenar_por_nombre(cursos, historial):
-    if not cursos:
-        print("No hay cursos registrados para ordenar.")
-        return
-    print("¿Cómo deseas ordenar los nombres?")
-    print("1. De A a Z")
-    print("2. De Z a A")
-    try:
-        opcion = int(input("Seleccione una opción: "))
-    except ValueError:
-        print("Opción inválida.")
-        return
-    if opcion == 1:
-        ordenados = sorted(cursos.items(), key=lambda x: x[0].lower())
-        historial.append("Cursos ordenados por nombre (A-Z)")
-    elif opcion == 2:
-        ordenados = sorted(cursos.items(), key=lambda x: x[0].lower(), reverse=True)
-        historial.append("Cursos ordenados por nombre (Z-A)")
-    else:
-        print("Opción no válida.")
-        return
-    print("Cursos ordenados por nombre:")
-    for nombre, nota in ordenados:
-        print(f" - {nombre} / Nota: {nota}")
-        historial.append(f"Curso: {nombre} / Nota: {nota}")
+  
+
+
+
+
 #10. Búsqueda binaria
 def busqueda_binaria(cursos, historial):
     if not cursos:
