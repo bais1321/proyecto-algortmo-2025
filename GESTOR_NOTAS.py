@@ -1,346 +1,307 @@
-historialcursos = {}
-historialgeneral = []
-busquedalineal = {}
-
-# 1. Registro de notas de cursos
-def registronotacurso():
-    n = int(input("ingrese la cantidad de cursos que desea registrar: "))
-    for i in range(n):
-        nombre = input(f"ingrese el nombre del curso {i + 1}: ").strip()
-        if not nombre:
-            print("el nombre del curso no puede estar vacío.")
-            return
-        try:
-            nota = float(input("ingrese la nota obtenida (0-100): "))
-            if nota < 0 or nota > 100:
-                print("la nota debe estar entre 0 y 100.")
-                return
-        except ValueError:
-            print("la nota debe ser un numero.")
-            return
-
-        historialcursos[nombre] = nota
-        print(f"curso {nombre} registrado correctamente con nota {nota}.")
-
-# 2. Mostrar cursos
-def mostrarcursos(historialcursos):
-    if not historialcursos:
-        print("no hay cursos registrados.")
-    else:
-        print("listado de cursos registrados:")
-        for nombre, nota in historialcursos.items():
-            print(f"{nombre} → nota: {nota}")
-
-# 3. Promedio general
-def promediogeneral(historialcursos):
-    if not historialcursos:
-        print("no hay cursos registrados para calcular el promedio.")
-        return
-
-    total = sum(historialcursos.values())
-    promedio = total / len(historialcursos)
-    print(f"promedio general calculado: {promedio:.2f}")
-
-# 4. Conteo de cursos aprobados y reprobados
-def reproapro(historialcursos):
-    aprobados = 0
-    reprobados = 0
-    for nota in historialcursos.values():
-        if nota >= 60:
-            aprobados += 1
-        else:
-            reprobados += 1
-    print(f"total de cursos aprobados: {aprobados}")
-    print(f"total de cursos reprobados: {reprobados}")
-
-# 5. Búsqueda lineal
-def busquedalineal_func(historialcursos, busquedalineal, historialgeneral):
-    nombre = input("ingrese el nombre del curso a buscar: ").strip()
-    if not nombre:
-        print("este campo no puede estar vacio")
-        return
-
-    encontrado = False
-    for curso in historialcursos:
-        if curso.lower() == nombre.lower():
-            print(f"curso encontrado: {curso} // nota: {historialcursos[curso]}")
-            busquedalineal[curso] = busquedalineal.get(curso, 0) + 1
-            print(f"este curso ha sido consultado {busquedalineal[curso]} veces.")
-            historialgeneral.append(f"Se busco el curso {curso} - total de busquedas: {busquedalineal[curso]}")
-            encontrado = True
-            break
-    if not encontrado:
-        print("curso no encontrado.")
-        historialgeneral.append(f"busqueda fallida: curso {nombre} no encontrado.")
-
-# 6. Actualizar o editar nombre del curso/nota
-def editarcursonota(historialcursos, historialgeneral):
-    nombre = input("ingrese el nombre del curso que desea actualizar: ").strip()
-    if not nombre:
-        print("este campo no puede estar vacío.")
-        return
-    if nombre not in historialcursos:
-        print(f"el curso '{nombre}' no esta registrado.")
-        historialgeneral.append(f"intento fallido de actualizacion: curso {nombre} no encontrado.")
-        return
-    cursoactual = nombre
-    notaactual = historialcursos[cursoactual]
-    while True:
-        print(f"curso seleccionado: {cursoactual}  nota actual: {notaactual}")
-        print("1. editar nombre del curso")
-        print("2. editar nota del curso")
-        print("3. confirmar cambios")
-        try:
-            opcion = int(input("seleccione una opcion: "))
-        except ValueError:
-            print("ingrese una opción valida.")
-            continue
-        if opcion == 1:
-            nuevonombre = input("ingrese el nuevo nombre del curso: ").strip()
-            if not nuevonombre:
-                print("este campo no puede estar vacio.")
-                continue
-            if nuevonombre in historialcursos:
-                print("ya existe un curso con ese nombre.")
-                continue
-            historialcursos[nuevonombre] = historialcursos.pop(cursoactual)
-            historialgeneral.append(f"nombre actualizado: '{cursoactual}' → '{nuevonombre}'")
-            cursoactual = nuevonombre
-            print(f"nombre cambiado a {nuevonombre}.")
-        elif opcion == 2:
-            try:
-                nuevanota = float(input("ingrese la nueva nota (0-100): "))
-                if nuevanota < 0 or nuevanota > 100:
-                    print("la nota debe estar entre 0 y 100.")
-                    continue
-            except ValueError:
-                print("la nota debe ser un numero.")
-                continue
-            historialcursos[cursoactual] = nuevanota
-            notaactual = nuevanota
-            historialgeneral.append(f"nota actualizada para {cursoactual}: {nuevanota}")
-            print(f"nota cambiada a {nuevanota}.")
-        elif opcion == 3:
-            print("actualizado... regresando al menu principal...")
-            break
-        else:
-            print("opción no valida.")
-
-# 7. Eliminar curso
-def eliminarcurso(historialcursos, historialgeneral):
-    if not historialcursos:
-        print("no hay cursos registrados para eliminar.")
-        return
-    nombre = input("ingrese el nombre del curso que desea eliminar: ").strip()
-    if not nombre:
-        print("este campo no puede estar vacio.")
-        return
-    curso_encontrado = None
-    for curso in historialcursos:
-        if curso.lower() == nombre.lower():
-            curso_encontrado = curso
-            break
-    if curso_encontrado:
-        confirmacion = input(f"seguro que desea eliminar {curso_encontrado} (s/n): ").lower()
-        if confirmacion == 's':
-            historialcursos.pop(curso_encontrado)
-            historialgeneral.append(f"curso eliminado: {curso_encontrado}")
-            print(f"Curso '{curso_encontrado}' eliminado correctamente")
-        else:
-            print("la eliminacion fue cancelada")
-    else:
-        print(f"el curso {nombre} no fue encontrado.")
-        historialgeneral.append(f"intento fallido de eliminación: curso {nombre} no existe.")
-
-# 8. Ordenar por nota (burbuja)
-def ordenar_por_nota(cursos, historial):
-    if not cursos:
-        print("No hay cursos para ordenar.")
-        return
-
-    print("1. De menor a mayor")
-    print("2. De mayor a menor")
-    opcion = int(input("Elige una opción: "))
-
-    lista = list(cursos.items())  # Convertir el diccionario a lista de tuplas
-
-    # Algoritmo burbuja clásico
-    for i in range(len(lista)):
-        for j in range(len(lista) - 1):
-            if opcion == 1 and lista[j][1] > lista[j + 1][1]:
-                lista[j], lista[j + 1] = lista[j + 1], lista[j]
-            elif opcion == 2 and lista[j][1] < lista[j + 1][1]:
-                lista[j], lista[j + 1] = lista[j + 1], lista[j]
-
-    print("Cursos ordenados:")
-    for nombre, nota in lista:
-        print(f"{nombre} - Nota: {nota}")
-        historial.append(f"{nombre} - Nota: {nota}")
-
-# 9. Ordenar por nombre (inserción)
-def ordenar_por_nombre(cursos, historial):
-    if not cursos:
-        print("No hay cursos registrados para ordenar.")
-        return
-    print("¿Cómo deseas ordenar los nombres?")
-    print("1. De A a Z")
-    print("2. De Z a A")
-    try:
-        opcion = int(input("Seleccione una opción: "))
-    except ValueError:
-        print("Opción inválida.")
-        return
-
-    lista = list(cursos.items())
-
-    # Ordenamiento por inserción
-    for i in range(1, len(lista)):
-        clave = lista[i]
-        j = i - 1
-
-        # Comparación de nombres (ignorando mayúsculas/minúsculas)
-        while j >= 0 and (
-            (opcion == 1 and clave[0].lower() < lista[j][0].lower()) or
-            (opcion == 2 and clave[0].lower() > lista[j][0].lower())
-        ):
-            lista[j + 1] = lista[j]
-            j -= 1
-        lista[j + 1] = clave
-
-    if opcion == 1:
-        historial.append("Cursos ordenados por nombre (A-Z) con inserción")
-    elif opcion == 2:
-        historial.append("Cursos ordenados por nombre (Z-A) con inserción")
-
-    print("Cursos ordenados por nombre:")
-    for nombre, nota in lista:
-        print(f" - {nombre} / Nota: {nota}")
-        historial.append(f"Curso: {nombre} / Nota: {nota}")
-
-# 10. Búsqueda binaria
-def busqueda_binaria(cursos, historial):
-    if not cursos:
-        print("No hay cursos registrados.")
-        return
-
-    nombre = input("Ingrese el nombre del curso a buscar (binaria): ").strip()
-    if not nombre:
-        print("El nombre no puede estar vacío.")
-        return
-
-    nombres_ordenados = sorted(cursos.keys(), key=lambda x: x.lower())
-    izquierda = 0
-    derecha = len(nombres_ordenados) - 1
-    encontrado = False
-
-    while izquierda <= derecha:
-        medio = (izquierda + derecha) // 2
-        curso_medio = nombres_ordenados[medio]
-
-        if curso_medio.lower() == nombre.lower():
-            nota = cursos[curso_medio]
-            print(f"Curso encontrado: {curso_medio} / Nota: {nota}")
-            historial.append(f"Búsqueda binaria exitosa: '{curso_medio}' con nota {nota}")
-            encontrado = True
-            break
-        elif nombre.lower() < curso_medio.lower():
-            derecha = medio - 1
-        else:
-            izquierda = medio + 1
-
-    if not encontrado:
-        print("Curso no encontrado.")
-        historial.append(f"Búsqueda binaria fallida: curso '{nombre}' no existe.")
-
-# 11. Simular cola de revisión
-def simular_cola_revision(historialcursos, nom_pers):
-    if not historialcursos:
-        print("No hay cursos en el historial.")
-        return
-
-    nom2 = input("confirme su nombre para iniciar la revisión: ")
-    if nom2.strip() == "":
-        print("El nombre no puede estar vacío.")
-        return
-
-    if nom2 != nom_pers:
-        print("El nombre no coincide con el registrado. Revisión cancelada.")
-        return
-
-    for curso, nota in historialcursos.items():
-        print(f"Revisando curso: {curso} / Nota: {nota}")
-    print(f"Hola {nom2}, comenzando la revisión de cursos...")
-    print("Simulando cola de revisión...")
-    print("Revisión de todos los cursos completada.")
-    print(f"Gracias por tu paciencia, {nom2}. Revisión finalizada.")
-    print("regresando al menu principal...")
-
-# 12. Mostrar historial de cambios
-def mostrarhistorial(historialgeneral):
-    if not historialgeneral:
-        print("no hay historial de acciones.")
-    else:
-        print("historial de acciones realizadas:")
-        for evento in historialgeneral:
-            print(f"- {evento}")
-
-# Menú principal
-print("bienvenido al sistema de registro de notas")
-nom_pers = input("Ingrese su nombre para empezar: ")
-if nom_pers == "":
-    print("El nombre no puede estar vacío. Reinicie el programa.")
-    exit()
-    
-print("Nombre registrado, ¡HERE WE GO!")
-
-while True:
-    print("Menú principal:")
-    print("1. Agregar curso")
-    print("2. Mostrar cursos")
-    print("3. Calcular promedio")
-    print("4. Conteo de cursos aprobados y reprobados")
-    print("5. Buscar curso por nombre (lineal)")
-    print("6. Actualizar o editar nombre del curso/nota")
-    print("7. Eliminar curso")
-    print("8. Ordenar por nota")
-    print("9. Ordenar por nombre")
-    print("10. Buscar curso por nombre (binaria)")
-    print("11. Simular cola de revisión")
-    print("12. Mostrar historial de cambios")
-    print("13. Salir")
-
-    try:
-        opcion = int(input("Ingrese el número de la opción: "))
-    except ValueError:
-        print("Por favor, ingrese un número válido.")
-        continue
-
-    if opcion == 1:
-        registronotacurso()
-    elif opcion == 2:
-        mostrarcursos(historialcursos)
-    elif opcion == 3:
-        promediogeneral(historialcursos)
-    elif opcion == 4:
-        reproapro(historialcursos)
-    elif opcion == 5:
-        busquedalineal_func(historialcursos, busquedalineal, historialgeneral)
-    elif opcion == 6:
-        editarcursonota(historialcursos, historialgeneral)
-    elif opcion == 7:
-        eliminarcurso(historialcursos, historialgeneral)
-    elif opcion == 8:
-        ordenar_por_nota(cursos=historialcursos, historial=historialgeneral)
-    elif opcion == 9:
-        ordenar_por_nombre(cursos=historialcursos, historial=historialgeneral)
-    elif opcion == 10:
-        busqueda_binaria(cursos=historialcursos, historial=historialgeneral)
-    elif opcion == 11:
-        simular_cola_revision(historialcursos, nom_pers)
-    elif opcion == 12:
-        mostrarhistorial(historialgeneral)
-    elif opcion == 13:
-        print(f"Gracias por usar el sistema, {nom_pers}, adiosito")
-        break
-    else:
-        print("ingrese una opcion valida")
+historialcursos = {}  
+historialgeneral = []  
+busquedalineal = {}  
+# 1. Registro de notas de cursos  
+def registronotacurso():  
+    n = int(input("ingrese la cantidad de cursos que desea registrar: "))  
+    for i in range(n):  
+        nombre = input(f"ingrese el nombre del curso {i + 1}: ").strip()  
+        if not nombre:  
+            print("el nombre del curso no puede estar vacío.")  
+            return  
+        try:  
+            nota = float(input("ingrese la nota obtenida (0-100): "))  
+            if nota < 0 or nota > 100:  
+                print("la nota debe estar entre 0 y 100.")  
+                return  
+        except ValueError:  
+            print("la nota debe ser un numero.")  
+            return  
+        historialcursos[nombre] = nota  
+        print(f"curso {nombre} registrado correctamente con nota {nota}.")  
+# 2. Mostrar cursos  
+def mostrarcursos(historialcursos):  
+    if not historialcursos:  
+        print("no hay cursos registrados.")  
+    else:  
+        print("listado de cursos registrados:")  
+        for nombre, nota in historialcursos.items():  
+            print(f"{nombre} → nota: {nota}")  
+# 3. Promedio general  
+def promediogeneral(historialcursos):  
+    if not historialcursos:  
+        print("no hay cursos registrados para calcular el promedio.")  
+        return  
+    total = sum(historialcursos.values())  
+    promedio = total / len(historialcursos)  
+    print(f"promedio general calculado: {promedio:.2f}")  
+# 4. Conteo de cursos aprobados y reprobados  
+def reproapro(historialcursos):  
+    aprobados = 0  
+    reprobados = 0  
+    for nota in historialcursos.values():  
+        if nota >= 60:  
+            aprobados += 1  
+        else:  
+            reprobados += 1  
+    print(f"total de cursos aprobados: {aprobados}")  
+    print(f"total de cursos reprobados: {reprobados}")  
+# 5. Búsqueda lineal  
+def busquedalineal(historialcursos, busquedalineal, historialgeneral):  
+    nombre = input("ingrese el nombre del curso a buscar: ").strip()  
+    if not nombre:  
+        print("este campo no puede estar vacio")  
+        return  
+    encontrado = False  
+    for curso in historialcursos:  
+        if curso.lower() == nombre.lower():  
+            print(f"curso encontrado: {curso} // nota: {historialcursos[curso]}")  
+            busquedalineal[curso] = busquedalineal.get(curso, 0) + 1  
+            print(f"este curso ha sido consultado {busquedalineal[curso]} veces.")  
+            historialgeneral.append(f"Se busco el curso {curso} - total de busquedas: {busquedalineal[curso]}")  
+            encontrado = True  
+            break  
+    if not encontrado:  
+        print("curso no encontrado.")  
+        historialgeneral.append(f"busqueda fallida: curso {nombre} no encontrado.")  
+# 6. Actualizar o editar nombre del curso/nota  
+def editarcursonota(historialcursos, historialgeneral):  
+    nombre = input("ingrese el nombre del curso que desea actualizar: ").strip()  
+    if not nombre:  
+        print("este campo no puede estar vacío.")  
+        return  
+    if nombre not in historialcursos:  
+        print(f"el curso '{nombre}' no esta registrado.")  
+        historialgeneral.append(f"intento fallido de actualizacion: curso {nombre} no encontrado.")  
+        return  
+    cursoactual = nombre  
+    notaactual = historialcursos[cursoactual]  
+    while True:  
+        print(f"curso seleccionado: {cursoactual}  nota actual: {notaactual}")  
+        print("1. editar nombre del curso")  
+        print("2. editar nota del curso")  
+        print("3. confirmar cambios")  
+        try:  
+            opcion = int(input("seleccione una opcion: "))  
+        except ValueError:  
+            print("ingrese una opción valida.")  
+            continue  
+        if opcion == 1:  
+            nuevonombre = input("ingrese el nuevo nombre del curso: ").strip()  
+            if not nuevonombre:  
+                print("este campo no puede estar vacio.")  
+                continue  
+            if nuevonombre in historialcursos:  
+                print("ya existe un curso con ese nombre.")  
+                continue  
+            historialcursos[nuevonombre] = historialcursos.pop(cursoactual)  
+            historialgeneral.append(f"nombre actualizado: '{cursoactual}' → '{nuevonombre}'")  
+            cursoactual = nuevonombre  
+            print(f"nombre cambiado a {nuevonombre}.")  
+        elif opcion == 2:  
+            try:  
+                nuevanota = float(input("ingrese la nueva nota (0-100): "))  
+                if nuevanota < 0 or nuevanota > 100:  
+                    print("la nota debe estar entre 0 y 100.")  
+                    continue  
+            except ValueError:  
+                print("la nota debe ser un numero.")  
+                continue  
+            historialcursos[cursoactual] = nuevanota  
+            notaactual = nuevanota  
+            historialgeneral.append(f"nota actualizada para {cursoactual}: {nuevanota}")  
+            print(f"nota cambiada a {nuevanota}.")  
+        elif opcion == 3:  
+            print("actualizado... regresando al menu principal")  
+            break  
+        else:  
+            print("opción no valida.")  
+# 7. Eliminar curso  
+def eliminarcurso(historialcursos, historialgeneral):  
+    if not historialcursos:  
+        print("no hay cursos registrados para eliminar.")  
+        return  
+    nombre = input("ingrese el nombre del curso que desea eliminar: ").strip()  
+    if not nombre:  
+        print("este campo no puede estar vacio.")  
+        return  
+    curso_encontrado = None  
+    for curso in historialcursos:  
+        if curso.lower() == nombre.lower():  
+            curso_encontrado = curso  
+            break  
+    if curso_encontrado:  
+        confirmacion = input(f"seguro que desea eliminar {curso_encontrado} (s/n): ").lower()  
+        if confirmacion == 's':  
+            historialcursos.pop(curso_encontrado)  
+            historialgeneral.append(f"curso eliminado: {curso_encontrado}")  
+            print(f"Curso '{curso_encontrado}' eliminado correctamente")  
+        else:  
+            print("la eliminacion fue cancelada")  
+    else:  
+        print(f"el curso {nombre} no fue encontrado.")  
+        historialgeneral.append(f"intento fallido de eliminación: curso {nombre} no existe.")  
+# 8. Ordenar por nota (burbuja)  
+def ordenarpornota(cursos, historial):  
+    if not cursos:  
+        print("No hay cursos para ordenar.")  
+        return  
+    lista = list(cursos.items())  # Convertir el diccionario a lista de tuplas  
+    # Ordenamiento burbuja descendente (de mayor a menor)  
+    n = len(lista)  
+    for i in range(n - 1):  
+        for j in range(n - i - 1):  
+            if lista[j][1] < lista[j + 1][1]:  # Cambiar a "<" para descendente  
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]  
+    print("Cursos ordenados por nota (de mayor a menor):")  
+    for nombre, nota in lista:  
+        print(f"{nombre} - Nota: {nota}")  
+        historial.append(f"{nombre} - Nota: {nota}")  
+# 9. Ordenar por nombre (inserción)  
+def ordenaralfabetico(cursos, historial):  
+    if not cursos:  
+        print("No hay cursos para ordenar.")  
+        return []  
+  
+    lista = list(cursos.items())  # Convertir el diccionario a lista de tuplas  
+  
+    # Algoritmo de inserción (A a Z)  
+    for i in range(1, len(lista)):  
+        actual = lista[i]  
+        j = i - 1  
+        while j >= 0 and lista[j][0].lower() > actual[0].lower():  
+            lista[j + 1] = lista[j]  
+            j -= 1  
+        lista[j + 1] = actual  
+  
+    print("Cursos ordenados alfabéticamente (A - Z):")  
+    for nombre, nota in lista:  
+        print(f"{nombre} - Nota: {nota}")  
+        historial.append(f"{nombre} - Nota: {nota}")  
+  
+    # Devuelve solo los nombres ordenados  
+    return [nombre for nombre, nota in lista]  
+# 10. Búsqueda binaria  
+def busquedabinaria(cursos, historial, nombres_ordenados):  
+    if not nombres_ordenados:  
+        print("No hay cursos registrados.")  
+        return  
+  
+    nombre = input("Ingrese el nombre del curso a buscar: ").strip()  
+    if not nombre:  
+        print("El nombre no puede estar vacío.")  
+        return  
+  
+    izquierda = 0  
+    derecha = len(nombres_ordenados) - 1  
+    encontrado = False  
+  
+    while izquierda <= derecha:  
+        medio = (izquierda + derecha) // 2  
+        curso_medio = nombres_ordenados[medio]  
+  
+        if curso_medio.lower() == nombre.lower():  
+            nota = cursos[curso_medio]  
+            print(f"Curso encontrado: {curso_medio} / Nota: {nota}")  
+            historial.append(f"Búsqueda binaria exitosa: '{curso_medio}' con nota {nota}")  
+            encontrado = True  
+            break  
+        elif nombre.lower() < curso_medio.lower():  
+            derecha = medio - 1  
+        else:  
+            izquierda = medio + 1  
+  
+    if not encontrado:  
+        print("Curso no encontrado.")  
+        historial.append(f"Búsqueda binaria fallida: curso '{nombre}' no existe.")  
+# 11. Simular cola de revisión  
+def simular(historialcursos, nom_pers):  
+    if not historialcursos:  
+        print("No hay cursos en el historial.")  
+        return  
+    nom2 = input("confirme su nombre para iniciar la revisión: ")  
+    if nom2.strip() == "":  
+        print("El nombre no puede estar vacío.")  
+        return  
+    if nom2 != nom_pers:  
+        print("su NOMBRE no coincide con el registrado. Revisión cancelada.")  
+        return  
+    for curso, nota in historialcursos.items():  
+        print(f"Revisando curso: {curso} / Nota: {nota}")  
+    print(f"Hola {nom2}, comenzando la revisión de cursos...")  
+    print("Simulando cola de revisión...")  
+    print("Revisión de todos los cursos completada.")  
+    print(f" {nom2} gracias por la espera. Revisión finalizada.")  
+    print("regresando al menu principal...")  
+# 12. Mostrar historial de cambios  
+def mostrarhistorial(historialgeneral):  
+    if not historialgeneral:  
+        print("no hay historial de acciones.")  
+    else:  
+        print("historial de acciones realizadas:")  
+        for evento in historialgeneral:  
+            print(f"- {evento}")  
+# Menú principal  
+print("bienvenido al sistema de registro de notas")  
+nom_pers = input("Ingrese su nombre para empezar: ")  
+if nom_pers == "":  
+    print("El nombre no puede estar vacío. Reinicie el programa.")  
+    exit()  
+      
+print("Nombre registrado, ¡HERE WE GO!")  
+  
+while True:  
+    print("Menú principal:")  
+    print("1. Agregar curso")  
+    print("2. Mostrar cursos")  
+    print("3. Calcular promedio")  
+    print("4. Conteo de cursos aprobados y reprobados")  
+    print("5. Buscar curso por nombre (lineal)")  
+    print("6. Actualizar o editar nombre del curso/nota")  
+    print("7. Eliminar curso")  
+    print("8. Ordenar por nota")  
+    print("9. Ordenar por nombre")  
+    print("10. Buscar curso por nombre (binaria)")  
+    print("11. Simular cola de revisión")  
+    print("12. Mostrar historial de cambios")  
+    print("13. Salir")  
+  
+    try:  
+        opcion = int(input("Ingrese el número de la opción: "))  
+    except ValueError:  
+        print("Por favor ingrese un número válido.")  
+        continue  
+  
+    if opcion == 1:  
+        registronotacurso()  
+    elif opcion == 2:  
+        mostrarcursos(historialcursos)  
+    elif opcion == 3:  
+        promediogeneral(historialcursos)  
+    elif opcion == 4:  
+        reproapro(historialcursos)  
+    elif opcion == 5:  
+        busquedalineal(historialcursos, busquedalineal, historialgeneral)  
+    elif opcion == 6:  
+        editarcursonota(historialcursos, historialgeneral)  
+    elif opcion == 7:  
+        eliminarcurso(historialcursos, historialgeneral)  
+    elif opcion == 8:  
+        ordenarpornota(historialcursos, historialgeneral)  
+    elif opcion == 9:  
+        nombres_ordenados = ordenaralfabetico(historialcursos, historialgeneral)  
+    elif opcion == 10:  
+        # La búsqueda binaria requiere la lista ordenada por nombre  
+        if 'nombres_ordenados' in locals():  
+            busquedabinaria(historialcursos, historialgeneral, nombres_ordenados)  
+        else:  
+            print("Primero debe ordenar los cursos por nombre (opción 9).")  
+    elif opcion == 11:  
+        simular(historialcursos, nom_pers)  
+    elif opcion == 12:  
+        mostrarhistorial(historialgeneral)  
+    elif opcion == 13:  
+        print(f"Gracias por usar el sistema, {nom_pers}. ¡Adiosito!")  
+        break  
+    else:  
+        print("Ingrese una opción válida.") 
