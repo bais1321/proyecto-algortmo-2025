@@ -1,3 +1,11 @@
+1. GESTOR DE NOTAS ACADEMICAS
+ 2. pseudocodigo parte 1
+   3. respondiendo a las preguntas
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 GESTOR DE NOTAS ACADEMICAS:
 este proyecto esta dirigido a aquellas personas a las cuales les interés el uso de
 aplicaciones fáciles  y eficaces al momento de tener un registro de notas ya que 
@@ -33,12 +41,7 @@ que ser de forma correcta para que la ejecucion de dicha opcion a requerir sea c
 implementaran librerias externas a python.
 
 
-
-
-
-
-
-
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 pseudocodigo
 
@@ -162,3 +165,22 @@ Algoritmo gestor_notas
 FinSegun
 Hasta Que menu = 7
 FinAlgoritmo
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+¿Qué aprendí con este proyecto?
+
+lo aprendido en la realizacion de este proyecto, fue que no se necesita tener un gran conocimiento para hacerlo. solo se trata de determinancion y dedicacion y claro el poder hacerlo 
+dedicande bastante tiempo para investicar funciones y todo lo relacionado al mundo de python
+
+¿Qué fue lo más desafiante de resolver?
+
+en lo personal el realizar la busqueda binaria, el ordenamiento en base a la nota o alfabeticamente, fue una de las partes dificiles pero lo mas dificil fue dedicarle el tiempo necesario
+para lograrlo, junto con las investigaciones correspondientes para lograrlo
+
+¿Qué mejoraría si tuviera más tiempo?
+posiblemente el implemento de clases para facilitar la ejecucion y el implementar librerias externas ayudaria bastante, y posiblemente si fuera posible hacerlo en alguna pagina web para
+que se vea mas realista y mas presentable.
+
