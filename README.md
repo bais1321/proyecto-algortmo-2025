@@ -1,5 +1,5 @@
 1. GESTOR DE NOTAS ACADEMICAS
- 2. pseudocodigo parte 1
+ 2. pseudocodigo solo una parte
    3. respondiendo a las preguntas
 
 
